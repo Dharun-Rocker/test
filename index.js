@@ -1,6 +1,18 @@
-var http = require('http');
+const qrcode = require('qrcode-terminal');
 
-http.createServer(function (req, res) {
-  res.write("I'm alive");
-  res.end();
-}).listen(8080);
+const { Client } = require('whatsapp-web.js');
+const client = new Client({
+  puppeteer: {
+		args: ['--no-sandbox'],
+	}
+});
+
+client.on('qr', qr => {
+    qrcode.generate(qr, {small: true});
+});
+
+client.on('ready', () => {
+    console.log('Client is ready!');
+});
+
+client.initialize()
